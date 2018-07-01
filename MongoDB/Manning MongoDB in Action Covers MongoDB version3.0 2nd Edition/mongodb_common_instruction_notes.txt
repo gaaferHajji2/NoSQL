@@ -1,0 +1,27 @@
+1--> To use the database we want, or create the db that we want we use: use dbname;
+	for example: use tutorial;
+	++++++++++++++++++++++++++++++++++++++++++++++
+2--> To display all databases in mongodb that we create in my account:
+	show databases;
+	++++++++++++++++++++++++++++++++++++++++++++++
+3--> To show the current database that we want we write: db
+	++++++++++++++++++++++++++++++++++++++++++++++
+4--> To insert data in the database that we want: db.dbName.insert({"key1":"value1", "key2":"value2", ...etc})
+	db.tutorial.insert({"name":"Gaafer 1", "age":"21"});
+	++++++++++++++++++++++++++++++++++++++++++++++
+5--> To display all the data in specific database after we use it (change to it):
+	db.dbName.find();
+	++++++++++++++++++++++++++++++++++++++++++++++
+6--> to get the size of database(how many rows there are in the database):
+	db.dbName.count();
+	++++++++++++++++++++++++++++++++++++++++++++++
+7--> to get the data using its specified key (may return more than one row that have the same key/s):
+	db.dbName.find({"key1", "value1", "key2":"value2", ...etc});
+	This is implicit and-operator.
+	++++++++++++++++++++++++++++++++++++++++++++++
+8--> to use and=-operation between keys:
+	db.dbName.find({$and:[{"key1":"value1"}, {"key2":"value2"}, ..etc]});
+	++++++++++++++++++++++++++++++++++++++++++++++
+9--> to find the first row that meet the conditions:
+	db.dbName.findOne({"key1":"value1", ...etc});
+	also we can use $and, $or.

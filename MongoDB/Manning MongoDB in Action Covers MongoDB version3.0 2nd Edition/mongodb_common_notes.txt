@@ -1,0 +1,51 @@
+1--> JavaScript shell:
+----------------------
+The Mongo DB command shell is a JavaScript 6 -based tool for administering the database and manipulating data. The mongo executable loads the shell and connects to a specified mongod process, or one running locally by default. The shell was developed to be similar to the My SQL shell; the biggest differences are that it’s based on JavaScript and SQL isn’t used. For instance, you can pick your database and then insert a simple document into the users collection like this:
+> use my_database
+> db.users.insert({name: "Kyle"});
+	****************************************
+2--> In addition to allowing you to insert and query for data, the shell permits you to run administrative commands. Some examples include viewing the current database operation, checking the status of replication to a secondary node, and configuring a collection for sharding. As you’ll see, the Mongo DB shell is indeed a powerful tool that’s worth getting to know well.
+	****************************************
+3--> Database drivers:
+----------------------
+If the notion of a database driver conjures up nightmares of low-level device hacking, don’t fret; the Mongo DB drivers are easy to use. The driver is the code used in an application to communicate with a Mongo DB server. All drivers have functionality to query, retrieve results, write data, and run database commands. Every effort has been made to provide an API that matches the idioms of the given language while also maintaining relatively uniform interfaces across languages. For instance, all of the drivers implement similar methods for saving a document to a collection, but the representation of the document itself will usually be whatever is most natural to each language. In Ruby, that means using a Ruby hash. In Python, a dictionary is appropriate. And in Java, which lacks any analogous language primitive, you usually represent documents as a Map object or something similar. Some developers like using an object relational mapper to help manage representing their data this way, but in practice, the Mongo DB drivers are complete enough that this isn’t required.
+	****************************************
+4--> Command-line tools:
+------------------------
+a--> mongodump and mongorestore —Standard utilities for backing up and restoring a database. mongodump saves the database’s data in its native BSON format and thus is best used for backups only; this tool has the advantage of being usable for hot backups, which can easily be restored with mongorestore.
+
+b--> mongoexport and mongoimport —Export and import JSON , CSV , and TSV data; this is useful if you need your data in widely supported formats. mongoimport can also be good for initial imports of large data sets, although before importing, it’s often desirable to adjust the data model to take best advantage of Mongo DB. In such cases, it’s easier to import the data through one of the drivers using a custom script.
+
+c--> mongosniff —A wire-sniffing tool for viewing operations sent to the database. It essentially translates the BSON going over the wire to human-readable shell statements.
+
+d--> mongostat —Similar to iostat , this utility constantly polls Mongo DB and the system to provide helpful stats, including the number of operations per second (inserts, queries, updates, deletes, and so on), the amount of virtual memory allocated, and the number of connections to the server.
+
+e--> mongotop —Similar to top , this utility polls Mongo DB and shows the amount of time it spends reading and writing data in each collection.
+
+f--> mongoperf —Helps you understand the disk operations happening in a running Mongo DB instance.
+
+g--> mongooplog —Shows what’s happening in the Mongo DB oplog.
+
+h--> Bsondump —Converts BSON files into human-readable formats including JSON.
+	****************************************
+5--> SIMPLE KEY - VALUE STORES:
+-------------------------------
+Simple key-value stores do what their name implies: they index values based on a supplied key. A common use case is caching. For instance, suppose you needed to cache an HTML page rendered by your app. The key in this case might be the page’s URL, and the value would be the rendered HTML itself. Note that as far as a key-value store is concerned, the value is an opaque byte array. There’s no enforced schema, as you’d find in a relational database, nor is there any concept of data types. This naturally limits the operations permitted by key-value stores: you can insert a new value and then use its key either to retrieve that value or delete it. Systems with such simplicity are generally fast and scalable.
+	****************************************
+4--> SOPHISTICATED KEY - VALUE STORES:
+--------------------------------------
+It’s possible to refine the simple key-value model to handle complicated read/write schemes or to provide a richer data model. In these cases, you end up with what we’ll term a sophisticated key-value store. One example is Amazon’s Dynamo.
+
+The aim of Dynamo is to be a database robust enough to continue functioning in the face of network failures, datacenter outages, and similar disruptions. This requires that the system always be read from and written to, which essentially requires that data be auto- matically replicated across multiple nodes. If a node fails, a user of the system—perhaps in this case a customer with an Amazon shopping cart—won’t experience any interruptions in service. Dynamo provides ways of resolving the inevitable conflicts that arise when a system allows the same data to be written to multiple nodes. At the same time, Dynamo is easily scaled. Because it’s masterless—all nodes are equal—it’s easy to understand the system as a whole, and nodes can be added easily. Although Dynamo is a proprietary system, the ideas used to build it have inspired many systems falling under the No SQL umbrella, including Cassandra, HB ase, and Riak KV.
+	****************************************
+5--> Tips and limitations:
+---------------------------
+a--> First, Mongo DB should usually be run on 64-bit machines. The processes in a 32-bit system are only capable of addressing 4 GB of memory. This means that as soon as your data set, including metadata and storage overhead, hits 4 GB , Mongo DB will no longer be able to store additional data. Most production systems will require more than this, so a 64-bit system will be necessary.
+
+b--> A second consequence of using virtual memory mapping is that memory for the data will be allocated automatically, as needed. This makes it trickier to run the database in a shared environment. As with database servers in general, Mongo DB is best run on a dedicated server. (may the solution with using Hadoop with Mongodb--reRead it and make search + example).
+
+c--> Perhaps the most important thing to know about Mongo DB ’s use of memory-mapped files is how it affects data sets that exceed the size of available RAM . When you query such a data set, it often requires a disk access for data that has been swapped out of memory. The consequence is that many users report excellent Mongo DB performance until the working set of their data exceeds memory and queries slow significantly. This problem isn’t exclusive to Mongo DB , but it’s a common pitfall and something to watch.
+
+d--> The Language of NoSQL may be difficult, and different from SQL.
+
+e--> Finally, it’s worth mentioning that although Mongo DB is one of the simplest databases to run locally as a single node, there’s a maintenance cost to running a large cluster. This is true of most distributed databases, but it’s acute with Mongo DB because it requires a cluster of three configuration nodes and handles replication separately with sharding. In some databases, such as HB ase, data is grouped into shards that can be replicated on any machine of the cluster. Mongo DB instead allows shards of replica-sets, meaning that a piece of data is replicated only within its replica set. Keeping sharding and replication as separate concepts has certain advantages, but also means that each must be configured and managed when you set up a Mongo DB cluster.
